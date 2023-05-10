@@ -1,6 +1,6 @@
 [
   {
-    "id": 1,
+    "pid": 1,
     "title": "producto prueba 1",
     "description": "Este es un producto prueba",
     "price": 200,
@@ -9,7 +9,7 @@
     "stock": 25
   },
   {
-    "id": 2,
+    "pid": 2,
     "title": "producto prueba 2",
     "description": "Este es un producto prueba",
     "price": 200,
@@ -18,7 +18,7 @@
     "stock": 25
   },
   {
-    "id": 3,
+    "pid": 3,
     "title": "producto prueba 3",
     "description": "Este es un producto prueba",
     "price": 200,
@@ -27,7 +27,7 @@
     "stock": 25
   },
   {
-    "id": 4,
+    "pid": 4,
     "title": "producto prueba 4",
     "description": "Este es un producto prueba",
     "price": 200,
@@ -36,7 +36,7 @@
     "stock": 25
   },
   {
-    "id": 5,
+    "pid": 5,
     "title": "producto prueba 5",
     "description": "Este es un producto prueba",
     "price": 200,
@@ -45,7 +45,7 @@
     "stock": 25
   },
   {
-    "id": 6,
+    "pid": 6,
     "title": "producto prueba 6",
     "description": "Este es un producto prueba",
     "price": 200,
@@ -54,7 +54,7 @@
     "stock": 25
   },
   {
-    "id": 7,
+    "pid": 7,
     "title": "producto prueba 7",
     "description": "Este es un producto prueba",
     "price": 200,
@@ -63,7 +63,7 @@
     "stock": 25
   },
   {
-    "id": 8,
+    "pid": 8,
     "title": "producto prueba 8",
     "description": "Este es un producto prueba",
     "price": 200,
@@ -72,7 +72,7 @@
     "stock": 25
   },
   {
-    "id": 9,
+    "pid": 9,
     "title": "producto prueba 9",
     "description": "Este es un producto prueba",
     "price": 200,
@@ -81,7 +81,7 @@
     "stock": 25
   },
   {
-    "id": 10,
+    "pid": 10,
     "title": "producto prueba 10",
     "description": "Este es un producto prueba",
     "price": 200,

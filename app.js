@@ -4,22 +4,59 @@ import ProductManager from "./productManager.js";
 const app = express();
 const PORT = 8080;
 
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 const productManager = new ProductManager();
 
-app.get("/productos", (req, res) => {
-  const products = productManager.getProducts();
-  if (req.query.limit) {
-    const limit = parseInt(req.query.limit);
-    const productsLimited = products.slice(0, limit);
-    res.send(productsLimited);
-  } else {
-    res.send(productManager.getProducts());
+app.get("/productos", async (req, res) => {
+  try {
+    const products = await productManager.getProducts();
+    if (req.query.limit) {
+      const limit = parseInt(req.query.limit);
+      const productsLimited = products.slice(0, limit);
+      return res.status(200).json({
+        status: "succes",
+        msj: "Productos requeridos",
+        data: productsLimited,
+      });
+    } else {
+      return res.status(200).json({
+        status: "succes",
+        msj: "Todos los productos.",
+        data: products,
+      });
+    }
+  } catch (err) {
+    res.status(500).json({
+      status: "Error",
+      msj: err.message,
+    });
   }
 });
 
-app.get("/productos/:id", (req, res) => {
-  const id = req.params.id;
-  res.send(productManager.getProductById(id));
+app.get("/productos/:pid", async (req, res) => {
+  try {
+    const pid = req.params.pid;
+    const product = await productManager.getProductById(pid);
+    if (product) {
+      res.status(200).json({
+        status: "succes",
+        msj: "Producto encontrado",
+        data: product,
+      });
+    } else {
+      res.status(404).json({
+        status: "Error",
+        msj: err.message,
+      });
+    }
+  } catch (err) {
+    res.status(500).json({
+      status: "Error",
+      msj: err.message,
+    });
+  }
 });
 
 app.listen(PORT, () => {
