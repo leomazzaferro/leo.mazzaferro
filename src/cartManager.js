@@ -15,14 +15,14 @@ export default class CartManager {
 
   createCart() {
     const cartId = uuidv4();
-    const newCart = { id: cartId, product: [] };
+    const newCart = { cid: cartId, products: [] };
     this.carts.push(newCart);
     console.log(newCart);
     return newCart;
   }
 
   getCartByID(cid) {
-    console.log(cid);
+    console.log(typeof cid);
     const findCart = this.carts.find((cart) => cart.cid == cid);
     console.log(findCart);
     if (findCart) {
@@ -32,5 +32,19 @@ export default class CartManager {
     }
   }
 
-  addProductToCart() {}
+  addProductToCart(cid, pid) {
+    const cart = this.carts.find((cart) => cart.cid == cid);
+    console.log(cart);
+    if (!cart) {
+      throw new Error("Carrito no found.");
+    }
+    const productExist = cart.products.find((product) => product.pid == pid);
+    console.log(productExist);
+    if (productExist) {
+      productExist.quantity++;
+    } else {
+      cart.products.push({ pid: pid, quantity: 1 });
+      return cart;
+    }
+  }
 }

@@ -54,3 +54,18 @@ cartRouter.get("/:cid", async (req, res) => {
     });
   }
 });
+
+cartRouter.post("/:cid/product/:pid", async (req, res) => {
+  try {
+    const cid = req.params.cid;
+    const pid = req.params.pid;
+    await cartManager.addProductToCart(cid, pid);
+    return res.status(200).json({
+      status: "succes",
+      msg: "carrito actualizado",
+      data: cartManager.carts.find((c) => c.cid == cid),
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
