@@ -31,30 +31,42 @@ export default class ProductManager {
     let index = this.products.findIndex((product) => product.pid == pid);
     console.log(index);
     if (index !== -1) {
-      this.products.splice(index, 1);
-      return this.products[index];
+      const deletedProduct = this.products.splice(index, 1);
+      return deletedProduct;
     } else {
       throw new Error("Producto no encontrado para borrar.");
     }
   }
 
   addProduct(body) {
+    //console.log(body.code);
     let generateId = uuidv4();
-    let repeatCode = this.products.find((product) => product.code === code)
+    let repeatCode = this.products.find((product) => product.code == body.code)
       ? true
       : false;
+    let thumbnails = body.thumbnails ? body.thumbnails : [];
     const newProduct = {
       pid: generateId,
       createdAt: Date.now(),
       status: true,
+      thumbnails,
       ...body,
     };
-    if (!title || !description || !category || !price || !code || !stock) {
+    //console.log(newProduct);
+    if (
+      !body.title ||
+      !body.description ||
+      !body.category ||
+      !body.price ||
+      !body.code ||
+      !body.stock
+    ) {
       throw new Error("Todos los campos son obligatorios.");
     } else if (repeatCode === true) {
       throw new Error("Codigo de producto ya ingresado.");
     } else {
       this.products.push(newProduct);
+      return newProduct;
     }
   }
 

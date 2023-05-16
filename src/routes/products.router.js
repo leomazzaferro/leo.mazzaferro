@@ -16,7 +16,7 @@ productsRouter.get("/", async (req, res) => {
   } catch (err) {
     return res.status(500).json({
       status: "Error",
-      msj: "hola",
+      msg: "hola",
     });
   }
 });
@@ -28,14 +28,14 @@ productsRouter.get("/:pid", async (req, res) => {
     if (product) {
       return res.status(200).json({
         status: "succes",
-        msj: "Producto encontrado",
+        msg: "Producto encontrado",
         data: product,
       });
     }
   } catch (err) {
     return res.status(404).json({
       status: "Error",
-      msj: err.message,
+      msg: err.message,
     });
   }
 });
@@ -46,7 +46,7 @@ productsRouter.delete("/:pid", async (req, res) => {
     const deletedProduct = await productManager.deleteProduct(pid);
     return res.status(200).json({
       status: "Succes.",
-      msj: "Producto eliminado.",
+      msg: "Producto eliminado.",
       data: deletedProduct,
     });
   } catch (err) {
@@ -60,6 +60,7 @@ productsRouter.delete("/:pid", async (req, res) => {
 productsRouter.post("/", async (req, res) => {
   try {
     const body = req.body;
+    //console.log(body);
     const newProduct = await productManager.addProduct(body);
     return res.status(201).json({
       status: "Succes",
