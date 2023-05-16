@@ -4,9 +4,27 @@ import { v4 as uuidv4 } from "uuid";
 export default class ProductManager {
   constructor(path) {
     this.path = path;
-    const productString = fs.readFileSync(this.path, "utf-8");
-    const products = JSON.parse(productString);
-    this.products = products;
+    this.products = [];
+    this.readProducts();
+  }
+
+  readProducts() {
+    try {
+      const data = fs.readFileSync(this.path, "utf-8");
+      if (data) {
+        this.products = JSON.parse(data);
+      }
+    } catch (err) {
+      console.log("No se pudo leer el archivo productos.");
+    }
+  }
+
+  writeProducts() {
+    try {
+      fs.writeFileSync(this.path, JSON.stringify(this.products), "utf-8");
+    } catch (err) {
+      console.log("No se pudo escribir el archivo productos.");
+    }
   }
 
   getProducts(limit) {
@@ -32,6 +50,7 @@ export default class ProductManager {
     console.log(index);
     if (index !== -1) {
       const deletedProduct = this.products.splice(index, 1);
+      this.writeProducts();
       return deletedProduct;
     } else {
       throw new Error("Producto no encontrado para borrar.");
@@ -66,6 +85,7 @@ export default class ProductManager {
       throw new Error("Codigo de producto ya ingresado.");
     } else {
       this.products.push(newProduct);
+      this.writeProducts();
       return newProduct;
     }
   }
@@ -79,6 +99,7 @@ export default class ProductManager {
     }
     const updatedProduct = { ...this.products[productIndex], ...body };
     this.products[productIndex] = updatedProduct;
+    this.writeProducts();
     return updatedProduct;
   }
 }

@@ -4,9 +4,27 @@ import { v4 as uuidv4 } from "uuid";
 export default class CartManager {
   constructor(path) {
     this.path = path;
-    const cartString = fs.readFileSync(this.path, "utf-8");
-    const carts = JSON.parse(cartString);
-    this.carts = carts;
+    this.carts = [];
+    this.readCarts();
+  }
+
+  readCarts() {
+    try {
+      const data = fs.readFileSync(this.path, "utf-8");
+      if (data) {
+        this.carts = JSON.parse(data);
+      }
+    } catch (err) {
+      console.log("No se pudo leer el archivo.");
+    }
+  }
+
+  writeCarts() {
+    try {
+      fs.writeFileSync(this.path, JSON.stringify(this.carts), "utf-8");
+    } catch (err) {
+      console.log("No se pudo escribir el archivo.");
+    }
   }
 
   getCarts() {
@@ -18,6 +36,7 @@ export default class CartManager {
     const newCart = { cid: cartId, products: [] };
     this.carts.push(newCart);
     console.log(newCart);
+    this.writeCarts();
     return newCart;
   }
 
@@ -44,6 +63,7 @@ export default class CartManager {
       productExist.quantity++;
     } else {
       cart.products.push({ pid: pid, quantity: 1 });
+      this.writeCarts();
       return cart;
     }
   }
