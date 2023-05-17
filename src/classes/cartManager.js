@@ -53,12 +53,12 @@ export default class CartManager {
 
   async addProductToCart(cid, pid) {
     const cart = this.carts.find((cart) => cart.cid == cid);
-    console.log(cart);
+    //console.log(cart);
     if (!cart) {
       throw new Error("Carrito no found.");
     }
     const productExist = cart.products.find((product) => product.pid == pid);
-    console.log(productExist);
+    //console.log(productExist);
     if (productExist) {
       productExist.quantity++;
     } else {

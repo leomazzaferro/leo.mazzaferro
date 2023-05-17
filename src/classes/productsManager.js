@@ -47,7 +47,7 @@ export default class ProductManager {
 
   async deleteProduct(pid) {
     let index = this.products.findIndex((product) => product.pid == pid);
-    console.log(index);
+    //console.log(index);
     if (index !== -1) {
       const deletedProduct = this.products.splice(index, 1);
       await this.writeProducts();
@@ -57,7 +57,7 @@ export default class ProductManager {
     }
   }
 
-  addProduct(body) {
+  async addProduct(body) {
     //console.log(body.code);
     let generateId = uuidv4();
     let repeatCode = this.products.find((product) => product.code == body.code)
@@ -85,12 +85,12 @@ export default class ProductManager {
       throw new Error("Codigo de producto ya ingresado.");
     } else {
       this.products.push(newProduct);
-      this.writeProducts();
+      await this.writeProducts();
       return newProduct;
     }
   }
 
-  updateProduct(pid, body) {
+  async updateProduct(pid, body) {
     const productIndex = this.products.findIndex(
       (product) => product.pid == pid
     );
@@ -99,7 +99,7 @@ export default class ProductManager {
     }
     const updatedProduct = { ...this.products[productIndex], ...body };
     this.products[productIndex] = updatedProduct;
-    this.writeProducts();
+    await this.writeProducts();
     return updatedProduct;
   }
 }
