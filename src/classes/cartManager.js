@@ -15,7 +15,7 @@ export default class CartManager {
         this.carts = JSON.parse(data);
       }
     } catch (err) {
-      console.log("No se pudo leer el archivo.");
+      throw new Error("No se pudo leer el archivo.");
     }
   }
 
@@ -23,7 +23,7 @@ export default class CartManager {
     try {
       fs.writeFileSync(this.path, JSON.stringify(this.carts), "utf-8");
     } catch (err) {
-      console.log("No se pudo escribir el archivo.");
+      throw new Error("No se pudo escribir el archivo.");
     }
   }
 

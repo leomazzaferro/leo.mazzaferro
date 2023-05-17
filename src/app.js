@@ -13,7 +13,7 @@ app.listen(PORT, () => {
 });
 
 app.use("/api/productos", productsRouter);
-app.use("/api/cart", cartRouter);
+app.use("/api/carrito", cartRouter);
 
 app.get("*", (req, res) => {
   return res.status(404).json({
