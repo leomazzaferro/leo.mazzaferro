@@ -8,7 +8,7 @@ export default class CartManager {
     this.readCarts();
   }
 
-  readCarts() {
+  async readCarts() {
     try {
       const data = fs.readFileSync(this.path, "utf-8");
       if (data) {
@@ -19,7 +19,7 @@ export default class CartManager {
     }
   }
 
-  writeCarts() {
+  async writeCarts() {
     try {
       fs.writeFileSync(this.path, JSON.stringify(this.carts), "utf-8");
     } catch (err) {
@@ -27,16 +27,16 @@ export default class CartManager {
     }
   }
 
-  getCarts() {
+  async getCarts() {
     return this.carts;
   }
 
-  createCart() {
+  async createCart() {
     const cartId = uuidv4();
     const newCart = { cid: cartId, products: [] };
     this.carts.push(newCart);
     console.log(newCart);
-    this.writeCarts();
+    await this.writeCarts();
     return newCart;
   }
 
@@ -51,7 +51,7 @@ export default class CartManager {
     }
   }
 
-  addProductToCart(cid, pid) {
+  async addProductToCart(cid, pid) {
     const cart = this.carts.find((cart) => cart.cid == cid);
     console.log(cart);
     if (!cart) {
@@ -63,7 +63,7 @@ export default class CartManager {
       productExist.quantity++;
     } else {
       cart.products.push({ pid: pid, quantity: 1 });
-      this.writeCarts();
+      await this.writeCarts();
       return cart;
     }
   }

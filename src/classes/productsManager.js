@@ -19,7 +19,7 @@ export default class ProductManager {
     }
   }
 
-  writeProducts() {
+  async writeProducts() {
     try {
       fs.writeFileSync(this.path, JSON.stringify(this.products), "utf-8");
     } catch (err) {
@@ -27,7 +27,7 @@ export default class ProductManager {
     }
   }
 
-  getProducts(limit) {
+  async getProducts(limit) {
     if (limit) {
       const productsLimited = this.products.slice(0, limit);
       return productsLimited;
@@ -45,12 +45,12 @@ export default class ProductManager {
     }
   }
 
-  deleteProduct(pid) {
+  async deleteProduct(pid) {
     let index = this.products.findIndex((product) => product.pid == pid);
     console.log(index);
     if (index !== -1) {
       const deletedProduct = this.products.splice(index, 1);
-      this.writeProducts();
+      await this.writeProducts();
       return deletedProduct;
     } else {
       throw new Error("Producto no encontrado para borrar.");
