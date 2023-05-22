@@ -32,12 +32,16 @@ export default class CartManager {
   }
 
   async createCart() {
-    const cartId = uuidv4();
-    const newCart = { cid: cartId, products: [] };
-    this.carts.push(newCart);
-    console.log(newCart);
-    await this.writeCarts();
-    return newCart;
+    try {
+      const cartId = uuidv4();
+      const newCart = { cid: cartId, products: [] };
+      this.carts.push(newCart);
+      //console.log(newCart);
+      await this.writeCarts();
+      return newCart;
+    } catch (err) {
+      throw new Error("Error al crear carrito");
+    }
   }
 
   getCartByID(cid) {

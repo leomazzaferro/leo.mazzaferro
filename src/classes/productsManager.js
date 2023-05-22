@@ -8,7 +8,7 @@ export default class ProductManager {
     this.readProducts();
   }
 
-  readProducts() {
+  async readProducts() {
     try {
       const data = fs.readFileSync(this.path, "utf-8");
       if (data) {
