@@ -8,7 +8,7 @@ export const indexRouter = express.Router();
 indexRouter.get("/index", async (req, res) => {
   try {
     const products = await productManager.getProducts();
-    return res.status(200).render("index", { products });
+    return res.status(200).render("index", { products, style: "main.css" });
   } catch (err) {
     return res.status(500).json({
       status: "Error.",
