@@ -3,6 +3,7 @@ import handlebars from "express-handlebars";
 import { cartRouter } from "./routes/cart.router.js";
 import { productsRouter } from "./routes/products.router.js";
 import { indexRouter } from "./routes/index.router.js";
+import { socketRouter } from "./routes/socket.router.js";
 import { __dirname } from "./utils.js";
 import { Server } from "socket.io";
 
@@ -25,7 +26,17 @@ const httpServer = app.listen(PORT, () => {
 });
 
 //SOCKET
+app.use("", socketRouter);
 const socketServer = new Server(httpServer);
+socketServer.on("connection", (socket) => {
+  console.log("Nuevo usuario conectado.");
+  socket.on("message", (data) => {
+    console.log(data);
+  });
+  socket.on("message-2", (data) => {
+    console.log(data);
+  });
+});
 
 //ENDPOINTS
 app.use("/api/productos", productsRouter);
