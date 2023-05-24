@@ -59,6 +59,7 @@ export default class ProductManager {
 
   async addProduct(body) {
     //console.log(body.code);
+    console.log("HOLA");
     let generateId = uuidv4();
     let repeatCode = this.products.find((product) => product.code == body.code)
       ? true
@@ -86,6 +87,7 @@ export default class ProductManager {
     } else {
       this.products.push(newProduct);
       await this.writeProducts();
+      console.log("HOLA 2");
       return newProduct;
     }
   }

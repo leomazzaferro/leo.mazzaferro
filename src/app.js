@@ -1,11 +1,11 @@
 import express from "express";
 import handlebars from "express-handlebars";
-import { cartRouter } from "./routes/cart.router.js";
-import { productsRouter } from "./routes/products.router.js";
-import { indexRouter } from "./routes/index.router.js";
-import { socketRouter } from "./routes/socket.router.js";
-import { __dirname } from "./utils.js";
 import { Server } from "socket.io";
+import { cartRouter } from "./routes/cart.router.js";
+import { homeRouter } from "./routes/home.router.js";
+import { productsRouter } from "./routes/products.router.js";
+import { realTimeProductsRouter } from "./routes/real-time-products.router.js";
+import { __dirname } from "./utils.js";
 
 const app = express();
 const PORT = 8080;
@@ -26,15 +26,23 @@ const httpServer = app.listen(PORT, () => {
 });
 
 //SOCKET
-app.use("", socketRouter);
+app.use("", realTimeProductsRouter);
+//productmanager para socket
+import ProductManager from "./classes/productsManager.js";
+const productManager = new ProductManager("./src/data/products.json");
 const socketServer = new Server(httpServer);
 socketServer.on("connection", (socket) => {
-  console.log("Nuevo usuario conectado.");
-  socket.on("message", (data) => {
-    console.log(data);
-  });
-  socket.on("message-2", (data) => {
-    console.log(data);
+  console.log("Nuevo usuario conectado.(BACK)");
+  socket.on("add-product", async (newProduct) => {
+    try {
+      console.log(newProduct);
+      await productManager.addProduct(newProduct);
+      const newProductsList = await productManager.getProducts();
+      console.log(newProductsList);
+      socketServer.emit("new-products-list", newProductsList);
+    } catch (err) {
+      console.log(err);
+    }
   });
 });
 
@@ -43,7 +51,7 @@ app.use("/api/productos", productsRouter);
 app.use("/api/carrito", cartRouter);
 
 //PLANTILLAS
-app.use("", indexRouter);
+app.use("", homeRouter);
 
 app.get("*", (req, res) => {
   return res.status(404).json({
