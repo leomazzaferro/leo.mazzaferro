@@ -40,7 +40,7 @@ socket.on("new-products-list", (newProductsList) => {
     div.innerHTML = `
     <div>
       <p>ID:${product.pid} </p>
-      <p>Nombresssss:${product.title} </p>
+      <p>Nombres:${product.title} </p>
       <p>Precio:${product.price} </p>
       <hr/>
     </div>
