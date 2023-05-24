@@ -36,7 +36,7 @@ export default class ProductManager {
     }
   }
 
-  getProductById(pid) {
+  async getProductById(pid) {
     const findProduct = this.products.find((product) => product.pid == pid);
     if (findProduct) {
       return findProduct;

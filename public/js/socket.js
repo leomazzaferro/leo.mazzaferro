@@ -29,6 +29,10 @@ const deleteProductForm = document.getElementById("delete-prod-form");
 
 deleteProductForm.addEventListener("submit", (e) => {
   e.preventDefault();
+
+  const productId = document.getElementById("delete-button").value;
+  //console.log(productId);
+  socket.emit("delete-product", productId);
 });
 
 socket.on("new-products-list", (newProductsList) => {

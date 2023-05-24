@@ -34,17 +34,25 @@ const socketServer = new Server(httpServer);
 socketServer.on("connection", (socket) => {
   console.log("Nuevo usuario conectado.(BACK)");
   const emitProductList = async () => {
-    const products = await productManager.getProducts();
-    socket.emit("new-products-list", products);
+    const productsList = await productManager.getProducts();
+    socket.emit("new-products-list", productsList);
   };
   emitProductList();
-  console.log("listPRoducts");
+  //console.log("listPRoducts");
   socket.on("add-product", async (newProduct) => {
     try {
       console.log(newProduct);
       await productManager.addProduct(newProduct);
       const newProductsList = await productManager.getProducts();
       /* console.log(newProductsList); */
+      emitProductList();
+    } catch (err) {
+      console.log(err);
+    }
+  });
+  socket.on("delete-product", async (productId) => {
+    try {
+      await productManager.deleteProduct(productId);
       emitProductList();
     } catch (err) {
       console.log(err);
