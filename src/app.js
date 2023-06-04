@@ -22,7 +22,9 @@ app.set("view engine", "handlebars");
 
 //PORT
 const httpServer = app.listen(PORT, () => {
-  console.log(`Servidor iniciado en puerto http://localhost:${PORT}`);
+  console.log(
+    `App running on ${__dirname} - Servidor iniciado en puerto http://localhost:${PORT}`
+  );
 });
 
 //SOCKET
@@ -53,6 +55,7 @@ socketServer.on("connection", (socket) => {
   socket.on("delete-product", async (productId) => {
     try {
       await productManager.deleteProduct(productId);
+      console.log(`Producto eliminado ID:${productId}`);
       emitProductList();
     } catch (err) {
       console.log(err);

@@ -33,6 +33,7 @@ deleteProductForm.addEventListener("submit", (e) => {
   const productId = document.getElementById("delete-button").value;
   //console.log(productId);
   socket.emit("delete-product", productId);
+  deleteProductForm.reset();
 });
 
 socket.on("new-products-list", (newProductsList) => {
