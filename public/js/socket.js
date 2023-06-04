@@ -37,7 +37,7 @@ deleteProductForm.addEventListener("submit", (e) => {
 });
 
 socket.on("new-products-list", (newProductsList) => {
-  console.log(newProductsList);
+  //console.log(newProductsList);
   const productList = document.getElementById("dinamic-list-products");
   productList.innerHTML = "";
   newProductsList.forEach((product) => {

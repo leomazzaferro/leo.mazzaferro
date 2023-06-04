@@ -3,6 +3,7 @@ import handlebars from "express-handlebars";
 import { Server } from "socket.io";
 import { cartRouter } from "./routes/cart.router.js";
 import { homeRouter } from "./routes/home.router.js";
+import { testChatRouter } from "./routes/test-chat-router.js";
 import { productsRouter } from "./routes/products.router.js";
 import { realTimeProductsRouter } from "./routes/real-time-products.router.js";
 import { __dirname } from "./utils.js";
@@ -15,7 +16,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(express.static("public"));
 
-//MOTOR HANDLEBARS
+//MOTOR HANDLEBARS - Config Plantillas
 app.engine("handlebars", handlebars.engine());
 app.set("views", __dirname + "/views");
 app.set("view engine", "handlebars");
@@ -32,9 +33,13 @@ app.use("", realTimeProductsRouter);
 //productmanager para socket
 import ProductManager from "./classes/productsManager.js";
 const productManager = new ProductManager("./src/data/products.json");
+//chatmanager para chat
+import ChatManager from "./classes/chatManager.js";
+const chatManager = new ChatManager();
+//let msgs = [];
+
 const socketServer = new Server(httpServer);
 socketServer.on("connection", (socket) => {
-  console.log("Nuevo usuario conectado.(BACK)");
   const emitProductList = async () => {
     const productsList = await productManager.getProducts();
     socket.emit("new-products-list", productsList);
@@ -45,7 +50,7 @@ socketServer.on("connection", (socket) => {
     try {
       console.log(newProduct);
       await productManager.addProduct(newProduct);
-      const newProductsList = await productManager.getProducts();
+      /* const newProductsList = await productManager.getProducts(); */
       /* console.log(newProductsList); */
       emitProductList();
     } catch (err) {
@@ -61,7 +66,20 @@ socketServer.on("connection", (socket) => {
       console.log(err);
     }
   });
+  //SOCKET CHAT
+  socket.on("msg-chat", async (msg) => {
+    try {
+      await chatManager.addMsg(msg);
+      const chat = await chatManager.getChat();
+      socketServer.emit("list-chat", chat);
+    } catch (err) {
+      console.log(err);
+    }
+  });
 });
+
+//CHAT
+app.use("/test-chat", testChatRouter);
 
 //ENDPOINTS
 app.use("/api/productos", productsRouter);

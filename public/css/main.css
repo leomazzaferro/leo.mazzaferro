@@ -27,3 +27,18 @@ div {
   gap: 1rem;
 }
 
+.div-msgs {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.chat-color {
+  color: blue;
+}
+
+.msgs {
+  border: 1px solid black;
+  gap: 1rem;
+}
+
