@@ -6,10 +6,12 @@ import { homeRouter } from "./routes/home.router.js";
 import { testChatRouter } from "./routes/test-chat-router.js";
 import { productsRouter } from "./routes/products.router.js";
 import { realTimeProductsRouter } from "./routes/real-time-products.router.js";
-import { __dirname } from "./utils.js";
+import { __dirname, connectMongo } from "./utils.js";
 
 const app = express();
 const PORT = 8080;
+
+connectMongo();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -33,7 +35,7 @@ app.use("", realTimeProductsRouter);
 //productmanager para socket
 import ProductManager from "./classes/productsManager.js";
 const productManager = new ProductManager("./src/data/products.json");
-//chatmanager para chat
+//chatmanager para chat socket
 import ChatManager from "./classes/chatManager.js";
 const chatManager = new ChatManager();
 //let msgs = [];
@@ -50,8 +52,6 @@ socketServer.on("connection", (socket) => {
     try {
       console.log(newProduct);
       await productManager.addProduct(newProduct);
-      /* const newProductsList = await productManager.getProducts(); */
-      /* console.log(newProductsList); */
       emitProductList();
     } catch (err) {
       console.log(err);

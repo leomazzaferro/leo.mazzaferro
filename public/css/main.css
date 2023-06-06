@@ -35,10 +35,12 @@ div {
 
 .chat-color {
   color: blue;
+  margin: 1rem;
 }
 
 .msgs {
   border: 1px solid black;
   gap: 1rem;
+  border-radius: 5px;
 }
 
