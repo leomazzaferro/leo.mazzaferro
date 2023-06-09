@@ -2,13 +2,13 @@ import express from "express";
 import handlebars from "express-handlebars";
 import { __dirname } from "./config.js";
 import { cartRouter } from "./routes/cart.router.js";
-import { usersRouter } from "./routes/users.router.js";
 import { homeRouter } from "./routes/home.router.js";
 import { productsRouter } from "./routes/products.router.js";
 import { realTimeProductsRouter } from "./routes/real-time-products.router.js";
 import { testChatRouter } from "./routes/test-chat-router.js";
-import { connectSocketServer } from "./utils/connectSocketServer.js";
-import { connectMongo } from "./utils/dbConection.js";
+import { usersRouter } from "./routes/users.router.js";
+import { connectMongo } from "./utils/db-conection.js";
+import { connectSocketServer } from "./utils/socket-server.js";
 
 const app = express();
 const PORT = 8080;
@@ -26,7 +26,7 @@ app.set("views", __dirname + "/views");
 app.set("view engine", "handlebars");
 
 //PORT
-const httpServer = app.listen(PORT, () => {
+export const httpServer = app.listen(PORT, () => {
   console.log(
     `App running on ${__dirname} - Servidor iniciado en puerto http://localhost:${PORT}`
   );

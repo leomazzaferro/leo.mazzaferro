@@ -1,11 +1,9 @@
 import { Server } from "socket.io";
 
-//productmanager para socket
 import ProductManager from "../classes/productsManager.js";
+
+import { MsgModel } from "../DAO/models/msgs.models.js";
 const productManager = new ProductManager("./src/data/products.json");
-//chatmanager para chat socket
-import ChatManager from "../classes/chatManager.js";
-const chatManager = new ChatManager();
 
 export function connectSocketServer(httpServer) {
   const socketServer = new Server(httpServer);
@@ -37,8 +35,8 @@ export function connectSocketServer(httpServer) {
     //SOCKET CHAT
     socket.on("msg-chat", async (msg) => {
       try {
-        await chatManager.addMsg(msg);
-        const chat = await chatManager.getChat();
+        await MsgModel.create(msg);
+        const chat = await MsgModel.find({});
         socketServer.emit("list-chat", chat);
       } catch (err) {
         console.log(err);

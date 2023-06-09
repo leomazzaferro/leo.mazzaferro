@@ -1,10 +1,11 @@
 import express from "express";
 import { UserModel } from "../DAO/models/users.models.js";
+import { userService } from "../services/users.service.js";
 export const usersRouter = express.Router();
 
 usersRouter.get("/", async (req, res) => {
   try {
-    const users = await UserModel.find({});
+    const users = await userService.getAll();
     return res.status(200).json({
       status: "success",
       msg: "listado de usuarios",
@@ -23,12 +24,12 @@ usersRouter.get("/", async (req, res) => {
 usersRouter.get("/:uid", async (req, res) => {
   try {
     const { uid } = req.params;
-    const product = await ProductsModel.findOne(uid);
-    if (product) {
+    const user = await userService.getOne(uid);
+    if (user) {
       return res.status(200).json({
         status: "succes",
         msg: "product find.",
-        payload: product,
+        payload: user,
       });
     }
   } catch (err) {
