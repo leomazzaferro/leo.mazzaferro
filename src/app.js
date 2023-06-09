@@ -34,18 +34,20 @@ const httpServer = app.listen(PORT, () => {
 
 //SOCKET
 connectSocketServer(httpServer);
-app.use("", realTimeProductsRouter);
-//USERS
-app.use("/api/users", usersRouter);
+app.use("/real-time-products", realTimeProductsRouter);
+
 //CHAT
 app.use("/test-chat", testChatRouter);
 
+//USERS
+app.use("/api/users", usersRouter);
+
 //ENDPOINTS
-app.use("/api/productos", productsRouter);
-app.use("/api/carrito", cartRouter);
+app.use("/api/products", productsRouter);
+app.use("/api/carts", cartRouter);
 
 //PLANTILLAS
-app.use("", homeRouter);
+app.use("/", homeRouter);
 
 app.get("*", (req, res) => {
   return res.status(404).json({

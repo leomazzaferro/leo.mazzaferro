@@ -8,15 +8,34 @@ productsRouter.get("/", async (req, res) => {
     const products = await ProductsModel.find({});
     return res.status(200).json({
       status: "success",
-      msg: "listado de productos",
-      data: products,
+      msg: "list products.",
+      payload: products,
     });
   } catch (e) {
     console.log(e);
     return res.status(500).json({
       status: "error",
       msg: "something went wrong :(",
-      data: {},
+      payload: {},
+    });
+  }
+});
+
+productsRouter.get("/:pid", async (req, res) => {
+  try {
+    const { pid } = req.params;
+    const product = await ProductsModel.findOne(pid);
+    if (product) {
+      return res.status(200).json({
+        status: "succes",
+        msg: "product find.",
+        payload: product,
+      });
+    }
+  } catch (err) {
+    return res.status(404).json({
+      status: "Error",
+      msg: err.message,
     });
   }
 });
@@ -32,12 +51,12 @@ productsRouter.post("/", async (req, res) => {
       return res.status(400).json({
         status: "error",
         msg: "please complete title, lastname and price.",
-        data: {},
+        payload: {},
       });
     } else if (productExist) {
       return res.status(400).json({
-        status: "Error.",
-        msg: "Code alredy exist.",
+        status: "error",
+        msg: "code alredy exist.",
         payload: {},
       });
     }
@@ -51,22 +70,22 @@ productsRouter.post("/", async (req, res) => {
     });
     return res.status(201).json({
       status: "success",
-      msg: "user created",
-      data: productCreated,
+      msg: "user created.",
+      payload: productCreated,
     });
   } catch (e) {
     console.log(e);
     return res.status(500).json({
       status: "error",
       msg: "something went wrong :(",
-      data: {},
+      payload: {},
     });
   }
 });
 
-productsRouter.put("/:_id", async (req, res) => {
+productsRouter.put("/:pid", async (req, res) => {
   try {
-    const { _id } = req.params;
+    const { pid } = req.params;
     const { title, description, category, price, code, stock } = req.body;
     if (
       !title ||
@@ -75,53 +94,60 @@ productsRouter.put("/:_id", async (req, res) => {
       !price ||
       !code ||
       !stock ||
-      !_id
+      !pid
     ) {
-      console.log("Validation error");
+      console.log("validation error");
       return res.status(400).json({
-        status: "Error",
-        msg: "Validation error, all fields required.",
+        status: "error",
+        msg: "validation error, all fields required.",
         payload: {},
       });
     }
     const productUpdate = await ProductsModel.updateOne(
-      { _id },
-      { title, description, category, price, code, stock }
+      { pid },
+      {
+        title,
+        description,
+        category,
+        price,
+        code,
+        stock,
+      }
     );
     return res.status(201).json({
-      status: "Succes.",
-      msg: "Product updated.",
+      status: "succes",
+      msg: "product updated.",
       payload: productUpdate,
     });
   } catch (err) {
     return res.status(400).json({
-      status: "Error",
+      status: "error",
       msg: err.message,
     });
   }
 });
 
-productsRouter.delete("/:_id", async (req, res) => {
+productsRouter.delete("/:pid", async (req, res) => {
   try {
-    const { _id } = req.params;
-    const deleteProduct = await ProductsModel.findByIdAndDelete({ _id });
+    const { pid } = req.params;
+    const deleteProduct = await ProductsModel.findByIdAndDelete(pid);
     if (deleteProduct) {
       return res.status(200).json({
-        status: "Succes.",
-        msg: "Product deleted.",
+        status: "succes",
+        msg: "product deleted.",
         payload: deleteProduct,
       });
     } else {
       return res.status(404).json({
-        status: "Error.",
-        msg: "Product not found.",
+        status: "error",
+        msg: "product not found.",
         payload: {},
       });
     }
   } catch (err) {
     return res.status(500).json({
-      status: "Error.",
-      msg: "Something baaad.",
+      status: "error.",
+      msg: "something baaad :(",
       payload: {},
     });
   }

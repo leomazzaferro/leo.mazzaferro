@@ -3,24 +3,24 @@ const socket = io();
 
 const chatBox = document.getElementById("input-msg");
 
-let usuarioIngresado = "";
+let emailIngresado = "";
 
 async function main() {
-  const { value: nombre } = await Swal.fire({
-    title: "Enter your name",
+  const { value: email } = await Swal.fire({
+    title: "Enter your email",
     input: "text",
-    inputLabel: "Your name",
+    inputLabel: "Your email",
     inputValue: "",
     showCancelButton: false,
     allowOutsideClick: false,
     inputValidator: (value) => {
       if (!value) {
-        return "Debes ingresar un nombre!";
+        return "need email!";
       }
     },
   });
 
-  usuarioIngresado = nombre;
+  emailIngresado = email;
 }
 
 main();
@@ -29,7 +29,7 @@ chatBox.addEventListener("keyup", ({ key }) => {
   if (key == "Enter") {
     socket.emit("msg-chat", {
       msg: chatBox.value,
-      user: usuarioIngresado,
+      user: emailIngresado,
     });
     chatBox.value = "";
   }

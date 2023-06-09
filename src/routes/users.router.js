@@ -8,14 +8,33 @@ usersRouter.get("/", async (req, res) => {
     return res.status(200).json({
       status: "success",
       msg: "listado de usuarios",
-      data: users,
+      payload: users,
     });
   } catch (e) {
     console.log(e);
     return res.status(500).json({
       status: "error",
       msg: "something went wrong :(",
-      data: {},
+      payload: {},
+    });
+  }
+});
+
+usersRouter.get("/:uid", async (req, res) => {
+  try {
+    const { uid } = req.params;
+    const product = await ProductsModel.findOne(uid);
+    if (product) {
+      return res.status(200).json({
+        status: "succes",
+        msg: "product find.",
+        payload: product,
+      });
+    }
+  } catch (err) {
+    return res.status(404).json({
+      status: "Error",
+      msg: err.message,
     });
   }
 });
@@ -30,54 +49,80 @@ usersRouter.post("/", async (req, res) => {
       return res.status(400).json({
         status: "error",
         msg: "please complete firstName, lastname and email.",
-        data: {},
+        payload: {},
       });
     }
     const userCreated = await UserModel.create({ firstName, lastName, email });
     return res.status(201).json({
       status: "success",
       msg: "user created",
-      data: userCreated,
+      payload: userCreated,
     });
   } catch (e) {
     console.log(e);
     return res.status(500).json({
-      status: "error",
-      msg: "something went wrong :(",
-      data: {},
+      status: "error.",
+      msg: "something baaaaad :(",
+      payload: {},
     });
   }
 });
 
-usersRouter.put("/:id", async (req, res) => {
+usersRouter.put("/:uid", async (req, res) => {
   try {
-    const { id } = req.params;
+    const { uid } = req.params;
     const { firstName, lastName, email } = req.body;
-    if (!firstName || !lastName || !email || !id) {
+    if (!firstName || !lastName || !email || !uid) {
       console.log(
         "validation error: please complete firstName, lastname and email."
       );
       return res.status(400).json({
         status: "error",
         msg: "please complete firstName, lastname and email.",
-        data: {},
+        payload: {},
       });
     }
     const userUptaded = await UserModel.updateOne(
-      { _id: id },
+      { _id: uid },
       { firstName, lastName, email }
     );
     return res.status(201).json({
       status: "success",
       msg: "user uptaded",
-      data: userUptaded,
+      payload: userUptaded,
     });
   } catch (e) {
     console.log(e);
     return res.status(500).json({
       status: "error",
       msg: "something went wrong :(",
-      data: {},
+      payload: {},
+    });
+  }
+});
+
+usersRouter.delete("/:uid", async (req, res) => {
+  try {
+    const { uid } = req.params;
+    const deleteUser = await UserModel.findByIdAndDelete(uid);
+    if (deleteUser) {
+      return res.status(200).json({
+        status: "succes",
+        msg: "user deleted.",
+        payload: deleteUser,
+      });
+    } else {
+      return res.status(404).json({
+        status: "error",
+        msg: "user not found.",
+        payload: {},
+      });
+    }
+  } catch (err) {
+    return res.status(500).json({
+      status: "error.",
+      msg: "something baaad :(",
+      payload: {},
     });
   }
 });

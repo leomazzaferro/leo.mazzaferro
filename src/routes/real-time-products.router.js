@@ -5,7 +5,7 @@ const productManager = new ProductManager("./src/data/products.json");
 
 export const realTimeProductsRouter = express.Router();
 
-realTimeProductsRouter.get("/real-time-products", async (req, res) => {
+realTimeProductsRouter.get("/", async (req, res) => {
   try {
     const products = await productManager.getProducts();
     return res
