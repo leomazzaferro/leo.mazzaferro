@@ -1,11 +1,12 @@
 import express from "express";
-import { ProductsModel } from "../DAO/models/products.models.js";
+import { productService } from "../services/products.service.js";
+import { userService } from "../services/users.service.js";
 
 export const productsRouter = express.Router();
 
 productsRouter.get("/", async (req, res) => {
   try {
-    const products = await ProductsModel.find({});
+    const products = await productService.getAll();
     return res.status(200).json({
       status: "success",
       msg: "list products.",
@@ -15,7 +16,7 @@ productsRouter.get("/", async (req, res) => {
     console.log(e);
     return res.status(500).json({
       status: "error",
-      msg: "something went wrong :(",
+      msg: e.message,
       payload: {},
     });
   }
@@ -24,14 +25,12 @@ productsRouter.get("/", async (req, res) => {
 productsRouter.get("/:pid", async (req, res) => {
   try {
     const { pid } = req.params;
-    const product = await ProductsModel.findOne(pid);
-    if (product) {
-      return res.status(200).json({
-        status: "succes",
-        msg: "product find.",
-        payload: product,
-      });
-    }
+    const product = await productService.getOne(pid);
+    return res.status(200).json({
+      status: "succes",
+      msg: "product find.",
+      payload: product,
+    });
   } catch (err) {
     return res.status(404).json({
       status: "Error",
@@ -40,44 +39,37 @@ productsRouter.get("/:pid", async (req, res) => {
   }
 });
 
+productsRouter.delete("/:pid", async (req, res) => {
+  try {
+    const { pid } = req.params;
+    const deleteProduct = await productService.deleteOne(pid);
+    return res.status(200).json({
+      status: "succes",
+      msg: "product deleted.",
+      payload: deleteProduct,
+    });
+  } catch (err) {
+    return res.status(500).json({
+      status: "error.",
+      msg: err.message,
+      payload: {},
+    });
+  }
+});
+
 productsRouter.post("/", async (req, res) => {
   try {
-    const { title, description, category, price, code, stock } = req.body;
-    const productExist = await ProductsModel.exists({ code: code });
-    if (!title || !description || !category || !price || !code || !stock) {
-      console.log(
-        "validation error: please complete title, lastname and price."
-      );
-      return res.status(400).json({
-        status: "error",
-        msg: "please complete title, lastname and price.",
-        payload: {},
-      });
-    } else if (productExist) {
-      return res.status(400).json({
-        status: "error",
-        msg: "code alredy exist.",
-        payload: {},
-      });
-    }
-    const productCreated = await ProductsModel.create({
-      title,
-      description,
-      price,
-      category,
-      code,
-      stock,
-    });
+    const body = req.body;
+    const productCreated = await productService.createOne(body);
     return res.status(201).json({
       status: "success",
-      msg: "user created.",
+      msg: "product created.",
       payload: productCreated,
     });
   } catch (e) {
-    console.log(e);
     return res.status(500).json({
       status: "error",
-      msg: "something went wrong :(",
+      msg: e.message,
       payload: {},
     });
   }
@@ -86,34 +78,8 @@ productsRouter.post("/", async (req, res) => {
 productsRouter.put("/:pid", async (req, res) => {
   try {
     const { pid } = req.params;
-    const { title, description, category, price, code, stock } = req.body;
-    if (
-      !title ||
-      !description ||
-      !category ||
-      !price ||
-      !code ||
-      !stock ||
-      !pid
-    ) {
-      console.log("validation error");
-      return res.status(400).json({
-        status: "error",
-        msg: "validation error, all fields required.",
-        payload: {},
-      });
-    }
-    const productUpdate = await ProductsModel.updateOne(
-      { pid },
-      {
-        title,
-        description,
-        category,
-        price,
-        code,
-        stock,
-      }
-    );
+    const body = req.body;
+    const productUpdate = await productService.updateOne(pid, body);
     return res.status(201).json({
       status: "succes",
       msg: "product updated.",
@@ -123,31 +89,6 @@ productsRouter.put("/:pid", async (req, res) => {
     return res.status(400).json({
       status: "error",
       msg: err.message,
-    });
-  }
-});
-
-productsRouter.delete("/:pid", async (req, res) => {
-  try {
-    const { pid } = req.params;
-    const deleteProduct = await ProductsModel.findByIdAndDelete(pid);
-    if (deleteProduct) {
-      return res.status(200).json({
-        status: "succes",
-        msg: "product deleted.",
-        payload: deleteProduct,
-      });
-    } else {
-      return res.status(404).json({
-        status: "error",
-        msg: "product not found.",
-        payload: {},
-      });
-    }
-  } catch (err) {
-    return res.status(500).json({
-      status: "error.",
-      msg: "something baaad :(",
       payload: {},
     });
   }
