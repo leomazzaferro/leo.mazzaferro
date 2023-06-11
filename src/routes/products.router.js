@@ -1,6 +1,5 @@
 import express from "express";
 import { productService } from "../services/products.service.js";
-import { userService } from "../services/users.service.js";
 
 export const productsRouter = express.Router();
 
@@ -12,46 +11,47 @@ productsRouter.get("/", async (req, res) => {
       msg: "list products.",
       payload: products,
     });
-  } catch (e) {
-    console.log(e);
+  } catch (error) {
     return res.status(500).json({
       status: "error",
-      msg: e.message,
+      msg: error.message,
       payload: {},
     });
   }
 });
 
-productsRouter.get("/:pid", async (req, res) => {
+productsRouter.get("/:_id", async (req, res) => {
   try {
-    const { pid } = req.params;
-    const product = await productService.getOne(pid);
+    const { _id } = req.params;
+    const product = await productService.getOne(_id);
+    console.log("hola");
     return res.status(200).json({
       status: "succes",
-      msg: "product find.",
+      msg: "product found.",
       payload: product,
     });
-  } catch (err) {
+  } catch (error) {
     return res.status(404).json({
       status: "Error",
-      msg: err.message,
+      msg: error.message,
+      payload: {},
     });
   }
 });
 
-productsRouter.delete("/:pid", async (req, res) => {
+productsRouter.delete("/:_id", async (req, res) => {
   try {
-    const { pid } = req.params;
-    const deleteProduct = await productService.deleteOne(pid);
+    const { _id } = req.params;
+    const deleteProduct = await productService.deleteOne(_id);
     return res.status(200).json({
       status: "succes",
       msg: "product deleted.",
       payload: deleteProduct,
     });
-  } catch (err) {
+  } catch (error) {
     return res.status(500).json({
       status: "error.",
-      msg: err.message,
+      msg: error.message,
       payload: {},
     });
   }
@@ -66,120 +66,30 @@ productsRouter.post("/", async (req, res) => {
       msg: "product created.",
       payload: productCreated,
     });
-  } catch (e) {
+  } catch (error) {
     return res.status(500).json({
       status: "error",
-      msg: e.message,
+      msg: error.message,
       payload: {},
     });
   }
 });
 
-productsRouter.put("/:pid", async (req, res) => {
+productsRouter.put("/:_id", async (req, res) => {
   try {
-    const { pid } = req.params;
+    const { _id } = req.params;
     const body = req.body;
-    const productUpdate = await productService.updateOne(pid, body);
+    const productUpdate = await productService.updateOne(_id, body);
     return res.status(201).json({
       status: "succes",
       msg: "product updated.",
       payload: productUpdate,
     });
-  } catch (err) {
+  } catch (error) {
     return res.status(400).json({
       status: "error",
-      msg: err.message,
+      msg: error.message,
       payload: {},
     });
   }
 });
-
-/* productsRouter.get("/", async (req, res) => {
-  try {
-    const limit = parseInt(req.query.limit);
-    const products = await productManager.getProducts(limit);
-    return res.status(200).json({
-      status: "succes",
-      msg: "Productos",
-      data: products,
-    });
-  } catch (err) {
-    return res.status(500).json({
-      status: "Error",
-      msg: "hola",
-    });
-  }
-});
-
-productsRouter.get("/:pid", async (req, res) => {
-  try {
-    const pid = req.params.pid;
-    const product = await productManager.getProductById(pid);
-    if (product) {
-      return res.status(200).json({
-        status: "succes",
-        msg: "Producto encontrado",
-        data: product,
-      });
-    }
-  } catch (err) {
-    return res.status(404).json({
-      status: "Error",
-      msg: err.message,
-    });
-  }
-});
-
-productsRouter.delete("/:pid", async (req, res) => {
-  try {
-    const pid = req.params.pid;
-    const deletedProduct = await productManager.deleteProduct(pid);
-    return res.status(200).json({
-      status: "Succes.",
-      msg: "Producto eliminado.",
-      data: deletedProduct,
-    });
-  } catch (err) {
-    return res.status(404).json({
-      status: "Error",
-      msj: err.message,
-    });
-  }
-});
-
-productsRouter.post("/", async (req, res) => {
-  try {
-    const body = req.body;
-    //console.log(body);
-    const newProduct = await productManager.addProduct(body);
-    return res.status(201).json({
-      status: "Succes",
-      msg: "Producto agregado.",
-      data: newProduct,
-    });
-  } catch (err) {
-    return res.status(400).json({
-      status: "Error",
-      msg: err.message,
-    });
-  }
-});
-
-productsRouter.put("/:pid", async (req, res) => {
-  try {
-    const pid = req.params.pid;
-    const body = req.body;
-    const productUpdate = await productManager.updateProduct(pid, body);
-    return res.status(200).json({
-      status: "succes",
-      msg: "Producto actualizado",
-      data: productUpdate,
-    });
-  } catch (err) {
-    return res.status(400).json({
-      status: "Error",
-      msg: err.message,
-    });
-  }
-});
- */

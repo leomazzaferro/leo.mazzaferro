@@ -5,7 +5,7 @@ import { cartRouter } from "./routes/cart.router.js";
 import { homeRouter } from "./routes/home.router.js";
 import { productsRouter } from "./routes/products.router.js";
 import { realTimeProductsRouter } from "./routes/real-time-products.router.js";
-import { testChatRouter } from "./routes/test-chat-router.js";
+import { chatRouter } from "./routes/test-chat-router.js";
 import { usersRouter } from "./routes/users.router.js";
 import { connectMongo } from "./utils/db-conection.js";
 import { connectSocketServer } from "./utils/socket-server.js";
@@ -13,7 +13,12 @@ import { connectSocketServer } from "./utils/socket-server.js";
 const app = express();
 const PORT = 8080;
 
-connectMongo();
+//PORT
+export const httpServer = app.listen(PORT, () => {
+  console.log(
+    `App running on ${__dirname} - Servidor iniciado en puerto http://localhost:${PORT}`
+  );
+});
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -25,28 +30,19 @@ app.engine("handlebars", handlebars.engine());
 app.set("views", __dirname + "/views");
 app.set("view engine", "handlebars");
 
-//PORT
-export const httpServer = app.listen(PORT, () => {
-  console.log(
-    `App running on ${__dirname} - Servidor iniciado en puerto http://localhost:${PORT}`
-  );
-});
+connectMongo();
+connectSocketServer(httpServer);
 
 //SOCKET
-connectSocketServer(httpServer);
 app.use("/real-time-products", realTimeProductsRouter);
+app.use("/test-chat", chatRouter);
 
-//CHAT
-app.use("/test-chat", testChatRouter);
-
-//USERS
+//API ENDPOINTS
 app.use("/api/users", usersRouter);
-
-//ENDPOINTS
 app.use("/api/products", productsRouter);
 app.use("/api/carts", cartRouter);
 
-//PLANTILLAS
+//PLANTILLAS CON HTML
 app.use("/", homeRouter);
 
 app.get("*", (req, res) => {

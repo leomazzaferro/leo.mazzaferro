@@ -8,29 +8,33 @@ class UserService {
   }
 
   async getAll() {
-    try {
-      const users = await UserModel.find({});
-      return users;
-    } catch (error) {
+    const users = await UserModel.find({});
+    if (!users) {
       throw new Error("users not found.");
     }
+    return users;
   }
 
-  async getOne(uid) {
-    try {
-      const user = await UserModel.findById(uid);
-      console.log(user);
-      if (user) {
-        return user;
-      }
-    } catch (error) {
+  async getOne(_id) {
+    const user = await UserModel.findById({ _id });
+    if (!user) {
       throw new Error("user not found.");
     }
+    return user;
   }
 
+  async deleteOne(_id) {
+    const deleteUser = await UserModel.findByIdAndDelete(_id);
+    if (!deleteUser) {
+      throw new Error("user not found.");
+    }
+    return deleteUser;
+  }
+
+  //ver porq un error rompe la app y otro no
   async createOne(body) {
     const { firstName, lastName, email } = body;
-    this.validateUser(firstName, lastName, email);
+    //this.validateUser(firstName, lastName, email);
     const userCreated = await UserModel.create({
       firstName,
       lastName,
@@ -39,24 +43,13 @@ class UserService {
     return userCreated;
   }
 
-  async deleteOne(uid) {
-    try {
-      const deleteUser = await UserModel.findByIdAndDelete(uid);
-      if (deleteUser) {
-        return deleteUser;
-      }
-    } catch (error) {
-      throw new Error("user not found.");
-    }
-  }
-
   //aca hay un error!!!!!!!!
-  async updateOne(uid, body) {
+  async updateOne(_id, body) {
     //try {
     const { firstName, lastName, email } = body;
     await this.validateUser(firstName, lastName, email);
     const userUpdated = await UserModel.updateOne(
-      { _id: uid },
+      { _id: _id },
       { firstName, lastName, email }
     );
     return userUpdated;

@@ -10,20 +10,19 @@ usersRouter.get("/", async (req, res) => {
       msg: "listado de usuarios",
       payload: users,
     });
-  } catch (e) {
-    console.log(e);
+  } catch (error) {
     return res.status(500).json({
       status: "error",
-      msg: "something went wrong :(",
+      msg: error.message,
       payload: {},
     });
   }
 });
 
-usersRouter.get("/:uid", async (req, res) => {
+usersRouter.get("/:_id", async (req, res) => {
   try {
-    const { uid } = req.params;
-    const user = await userService.getOne(uid);
+    const { _id } = req.params;
+    const user = await userService.getOne(_id);
     if (user) {
       return res.status(200).json({
         status: "succes",
@@ -31,10 +30,28 @@ usersRouter.get("/:uid", async (req, res) => {
         payload: user,
       });
     }
-  } catch (err) {
+  } catch (error) {
     return res.status(404).json({
       status: "Error",
-      msg: err.message,
+      msg: error.message,
+    });
+  }
+});
+
+usersRouter.delete("/:_id", async (req, res) => {
+  try {
+    const { _id } = req.params;
+    const deleteUser = await userService.deleteOne(_id);
+    return res.status(200).json({
+      status: "succes",
+      msg: "user deleted.",
+      payload: { deleteUser },
+    });
+  } catch (error) {
+    return res.status(500).json({
+      status: "error.",
+      msg: error.message,
+      payload: {},
     });
   }
 });
@@ -48,50 +65,29 @@ usersRouter.post("/", async (req, res) => {
       msg: "user created.",
       payload: { userCreated },
     });
-  } catch (e) {
-    console.log(e);
+  } catch (error) {
     return res.status(500).json({
       status: "error.",
-      msg: e.message,
+      msg: error.message,
       payload: {},
     });
   }
 });
 
-usersRouter.put("/:uid", async (req, res) => {
+usersRouter.put("/:_id", async (req, res) => {
   try {
-    const { uid } = req.params;
+    const { _id } = req.params;
     const body = req.body;
-
-    await userService.updateOne(uid, body);
+    await userService.updateOne(_id, body);
     return res.status(201).json({
       status: "success",
       msg: "user uptaded",
       payload: {},
     });
-  } catch (e) {
-    console.log(e);
+  } catch (error) {
     return res.status(500).json({
       status: "error",
-      msg: e.message,
-      payload: {},
-    });
-  }
-});
-
-usersRouter.delete("/:uid", async (req, res) => {
-  try {
-    const { uid } = req.params;
-    const deleteUser = await userService.deleteOne(uid);
-    return res.status(200).json({
-      status: "succes",
-      msg: "user deleted.",
-      payload: { deleteUser },
-    });
-  } catch (err) {
-    return res.status(500).json({
-      status: "error.",
-      msg: err.message,
+      msg: error.message,
       payload: {},
     });
   }

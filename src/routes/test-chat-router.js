@@ -1,8 +1,8 @@
 import express from "express";
 
-export const testChatRouter = express.Router();
+export const chatRouter = express.Router();
 
-testChatRouter.get("/", async (req, res) => {
+chatRouter.get("/", async (req, res) => {
   try {
     return res.status(200).render("test-chat", { style: "main.css" });
   } catch (err) {
