@@ -24,7 +24,6 @@ productsRouter.get("/:_id", async (req, res) => {
   try {
     const { _id } = req.params;
     const product = await productService.getOne(_id);
-    console.log("hola");
     return res.status(200).json({
       status: "succes",
       msg: "product found.",

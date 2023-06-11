@@ -81,7 +81,7 @@ usersRouter.put("/:_id", async (req, res) => {
     await userService.updateOne(_id, body);
     return res.status(201).json({
       status: "success",
-      msg: "user uptaded",
+      msg: "user updated",
       payload: {},
     });
   } catch (error) {

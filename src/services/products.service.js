@@ -10,7 +10,6 @@ class ProductService {
   }
   async getOne(_id) {
     const product = await ProductsModel.findOne({ _id });
-    console.log(product);
     if (!product) {
       throw new Error("product not found.");
     }
@@ -26,6 +25,7 @@ class ProductService {
     return productDelete;
   }
 
+  //el models hace las validaciones automaticamente (?)
   async createOne(body) {
     const { title, description, category, price, code, stock } = body;
     //const productExist = await ProductsModel.exists({ code: code });
