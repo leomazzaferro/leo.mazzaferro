@@ -1,15 +1,13 @@
 import { Schema, model } from "mongoose";
 
 const schema = new Schema({
+  users: {
+    type: [{ user: { type: Schema.Types.ObjectId, ref: "users" } }],
+    default: [],
+  },
   products: {
-    type: [
-      {
-        productId: { type: String, max: 100 },
-        quantity: { type: String },
-      },
-    ],
-    required: true,
-    max: 100,
+    type: [{ product: { type: Schema.Types.ObjectId, ref: "products" } }],
+    default: [],
   },
 });
 

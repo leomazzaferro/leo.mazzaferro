@@ -26,15 +26,15 @@ cartRouter.get("/get", async (req, res) => {
 cartRouter.get("/:_id", async (req, res) => {
   try {
     const { _id } = req.params;
-    const cart = await cartService.getOne({ _id });
-    return res.status(204).json({
+    const cart = await cartService.getOne(_id);
+    return res.status(200).json({
       status: "succes",
-      msg: `cart ${{ _id }}`,
+      msg: "cart.",
       payload: cart,
     });
   } catch (error) {
     return res.status(500).json({
-      statu: "error",
+      status: "error",
       msg: error.message,
       payload: {},
     });
@@ -57,7 +57,7 @@ cartRouter.post("/", async (req, res) => {
   }
 });
 
-cartRouter.get("/:cid", async (req, res) => {
+/* cartRouter.get("/:cid", async (req, res) => {
   try {
     const cid = req.params.cid;
     const cart = await cartManager.getCartByID(cid);
@@ -74,7 +74,7 @@ cartRouter.get("/:cid", async (req, res) => {
       msg: err.message,
     });
   }
-});
+}); */
 
 cartRouter.post("/:cid/product/:pid", async (req, res) => {
   try {

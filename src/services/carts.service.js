@@ -8,11 +8,12 @@ class CartService {
     }
     return carts;
   }
-  async getOne({ _id }) {
-    const cart = await CartsModel.findById({ _id });
+  async getOne(_id) {
+    const cart = await CartsModel.findOne({ _id });
     if (!cart) {
       throw new Error("cart not found.");
     }
+
     return cart;
   }
   async createCart() {
@@ -22,14 +23,14 @@ class CartService {
     }
     return newCart;
   }
-  async addToCart(cid, _id, body) {
+  /* async addToCart(cid, _id, body) {
     const cart = await CartsModel.findById(cid);
     console.log(cart);
     if (!cart) {
       throw new Error("cart not found.");
     }
     const { pid, quantity } = body;
-  }
+  } */
 }
 
 export const cartService = new CartService();
