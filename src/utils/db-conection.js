@@ -3,7 +3,7 @@ import { CartsModel } from "../DAO/models/carts.models.js";
 export async function connectMongo() {
   try {
     await connect(
-      "mongodb+srv://leomazza:34381065Lm@backend.n1ips6k.mongodb.net/?retryWrites=true&w=majority",
+      "mongodb+srv://leomazza:8MQejqYAMw3Lz1x4@bakcend-coder.imci6ig.mongodb.net/?retryWrites=true&w=majority",
       {
         dbName: "backend",
       }

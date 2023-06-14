@@ -10,6 +10,7 @@ class CartService {
     }
     return carts;
   }
+
   async getOne(_id) {
     const cart = await CartsModel.findOne({ _id })
       .populate("users.user")
@@ -17,9 +18,9 @@ class CartService {
     if (!cart) {
       throw new Error("cart not found.");
     }
-
     return cart;
   }
+
   async deleteCart(_id) {
     const deleteCart = await CartsModel.findByIdAndDelete(_id);
     if (!deleteCart) {
@@ -27,6 +28,7 @@ class CartService {
     }
     return deleteCart;
   }
+
   async createCart() {
     const newCart = await CartsModel.create({});
     if (!newCart) {
@@ -34,16 +36,15 @@ class CartService {
     }
     return newCart;
   }
+
   async addToCart(cid, uid, pid) {
     const cart = await CartsModel.findById(cid);
-
     if (!cart) {
       throw new Error("cart not found.");
     }
     cart.users.push({ user: uid });
     cart.products.push({ product: pid });
     const res = await CartsModel.updateOne({ _id: cid }, cart);
-
     return res;
   }
 }
