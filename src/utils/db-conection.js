@@ -9,7 +9,7 @@ export async function connectMongo() {
       }
     );
     console.log("plug to mongo!");
-    const create = await CartsModel.create({});
+    /* const create = await CartsModel.create({}); */
   } catch (e) {
     console.log(e);
     throw "can not connect to the db";

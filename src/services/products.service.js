@@ -1,15 +1,39 @@
 import { ProductsModel } from "../DAO/models/products.models.js";
 
 class ProductService {
-  async getAll() {
-    const products = await ProductsModel.find({});
-    if (!products) {
-      throw new Error("products not found.");
+  async getAll(queryParams) {
+    const { limit = 5, page = 1, query, sort } = queryParams;
+    const filter = {};
+    if (query) {
+      filter.$or = [{ category: query }];
     }
-    return products;
+    const options = {
+      page: parseInt(page),
+      limit: parseInt(limit),
+      sort: sort === "desc" ? "-price" : "price",
+    };
+    const products = await ProductsModel.paginate(filter, options);
+    const response = {
+      status: "success",
+      payload: products.docs,
+      totalPages: products.totalPages,
+      prevPage: products.hasPrevPage ? products.prevPage : null,
+      nextPage: products.hasNextPage ? products.nextPage : null,
+      page: products.page,
+      hasPrevPage: products.hasPrevPage,
+      hasNextPage: products.hasNextPage,
+      prevLink: products.hasPrevPage
+        ? `/api/products?limit=${limit}&page=${products.prevPage}`
+        : null,
+      nextLink: products.hasNextPage
+        ? `/api/products?limit=${limit}&page=${products.nextPage}`
+        : null,
+    };
+    return response;
   }
-  async getOne(_id) {
-    const product = await ProductsModel.findOne({ _id });
+
+  async getOne(pid) {
+    const product = await ProductsModel.findOne({ pid });
     if (!product) {
       throw new Error("product not found.");
     }
@@ -17,8 +41,8 @@ class ProductService {
   }
 
   ///ver el error
-  async deleteOne(_id) {
-    const productDelete = await ProductsModel.findByIdAndDelete(_id);
+  async deleteOne(pid) {
+    const productDelete = await ProductsModel.findByIdAndDelete(pid);
     if (!productDelete) {
       throw new Error("product not found.");
     }
@@ -45,13 +69,13 @@ class ProductService {
     return productCreated;
   }
 
-  async updateOne(_id, body) {
+  async updateOne(pid, body) {
     const { title, description, category, price, code, stock } = body;
     if (!title || !description || !category || !price || !code || !stock) {
       throw new Error("all fields are required.");
     }
     const productUpdate = await ProductsModel.updateOne(
-      { _id },
+      { pid },
       {
         title,
         description,

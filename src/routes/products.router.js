@@ -5,7 +5,8 @@ export const productsRouter = express.Router();
 
 productsRouter.get("/", async (req, res) => {
   try {
-    const products = await productService.getAll();
+    const queryParams = req.query;
+    const products = await productService.getAll(queryParams);
     return res.status(200).json({
       status: "success",
       msg: "list products.",
@@ -20,17 +21,17 @@ productsRouter.get("/", async (req, res) => {
   }
 });
 
-productsRouter.get("/:_id", async (req, res) => {
+productsRouter.get("/:pid", async (req, res) => {
   try {
-    const { _id } = req.params;
-    const product = await productService.getOne(_id);
+    const { pid } = req.params;
+    const product = await productService.getOne(pid);
     return res.status(200).json({
       status: "succes",
       msg: "product found.",
       payload: product,
     });
   } catch (error) {
-    return res.status(404).json({
+    return res.status(500).json({
       status: "Error",
       msg: error.message,
       payload: {},
@@ -38,10 +39,10 @@ productsRouter.get("/:_id", async (req, res) => {
   }
 });
 
-productsRouter.delete("/:_id", async (req, res) => {
+productsRouter.delete("/:pid", async (req, res) => {
   try {
-    const { _id } = req.params;
-    const deleteProduct = await productService.deleteOne(_id);
+    const { pid } = req.params;
+    const deleteProduct = await productService.deleteOne(pid);
     return res.status(200).json({
       status: "succes",
       msg: "product deleted.",
@@ -74,18 +75,18 @@ productsRouter.post("/", async (req, res) => {
   }
 });
 
-productsRouter.put("/:_id", async (req, res) => {
+productsRouter.put("/:pid", async (req, res) => {
   try {
-    const { _id } = req.params;
+    const { pid } = req.params;
     const body = req.body;
-    const productUpdate = await productService.updateOne(_id, body);
+    const productUpdate = await productService.updateOne(pid, body);
     return res.status(201).json({
       status: "succes",
       msg: "product updated.",
       payload: productUpdate,
     });
   } catch (error) {
-    return res.status(400).json({
+    return res.status(500).json({
       status: "error",
       msg: error.message,
       payload: {},
