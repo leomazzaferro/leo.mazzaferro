@@ -37,7 +37,23 @@ cartRouter.get("/:cid", async (req, res) => {
     });
   }
 });
-
+cartRouter.delete("/:cid/products/:pid", async (req, res) => {
+  try {
+    const { cid, pid } = req.params;
+    const cart = await cartService.deleteProduct(cid, pid);
+    return res.status(200).json({
+      status: "succes",
+      msg: "product delete from cart",
+      payload: cart,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      status: "error",
+      msg: error.message,
+      payload: {},
+    });
+  }
+});
 cartRouter.delete("/:cid", async (req, res) => {
   try {
     const { cid } = req.params;
@@ -84,6 +100,43 @@ cartRouter.post("/:cid/product/:pid", async (req, res) => {
     });
   } catch (error) {
     return res.status(400).json({
+      status: "Error",
+      msg: error.message,
+      payload: {},
+    });
+  }
+});
+cartRouter.put("/:cid", async (req, res) => {
+  try {
+    const { cid } = req.params;
+    const { body } = req.body;
+    const cart = await cartService.updateCart(cid, body);
+    return res.status(200).json({
+      status: "succes",
+      msg: "cart update.",
+      payload: cart,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      status: "Error",
+      msg: error.message,
+      payload: {},
+    });
+  }
+});
+cartRouter.put("/:cid/product/:pid", async (req, res) => {
+  try {
+    const { cid, pid } = req.params;
+    const { quantity } = req.body;
+    /* console.log(cid, pid, quantity); */
+    const cart = await cartService.updateQuantity(cid, pid, quantity);
+    return res.status(200).json({
+      status: "succes",
+      msg: "quantity update.",
+      payload: cart,
+    });
+  } catch (error) {
+    return res.status(500).json({
       status: "Error",
       msg: error.message,
       payload: {},

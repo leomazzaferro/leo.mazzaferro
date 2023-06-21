@@ -33,7 +33,7 @@ class ProductService {
   }
 
   async getOne(pid) {
-    const product = await ProductsModel.findOne({ pid });
+    const product = await ProductsModel.findOne({ _id: pid });
     if (!product) {
       throw new Error("product not found.");
     }
@@ -75,7 +75,7 @@ class ProductService {
       throw new Error("all fields are required.");
     }
     const productUpdate = await ProductsModel.updateOne(
-      { pid },
+      { _id: pid },
       {
         title,
         description,

@@ -7,6 +7,7 @@ import { productsRouter } from "./routes/products.router.js";
 import { realTimeProductsRouter } from "./routes/real-time-products.router.js";
 import { chatRouter } from "./routes/test-chat-router.js";
 import { usersRouter } from "./routes/users.router.js";
+import { viewsRouter } from "./routes/views.router.js";
 import { connectMongo } from "./utils/db-conection.js";
 import { connectSocketServer } from "./utils/socket-server.js";
 
@@ -44,6 +45,7 @@ app.use("/api/carts", cartRouter);
 
 //PLANTILLAS CON HTML
 app.use("/", homeRouter);
+app.use("/", viewsRouter);
 
 app.get("*", (req, res) => {
   return res.status(404).json({

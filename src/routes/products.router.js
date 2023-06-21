@@ -6,11 +6,11 @@ export const productsRouter = express.Router();
 productsRouter.get("/", async (req, res) => {
   try {
     const queryParams = req.query;
-    const products = await productService.getAll(queryParams);
+    const response = await productService.getAll(queryParams);
     return res.status(200).json({
       status: "success",
       msg: "list products.",
-      payload: products,
+      payload: response,
     });
   } catch (error) {
     return res.status(500).json({
